@@ -545,23 +545,6 @@ oc delete kafka my-cluster -n kafka
 oc delete project kafka
 ```
 
-## Cost Optimization
-
-### Storage
-- Use snapshots instead of maintaining extra disks
-- Right-size based on actual usage
-- Consider lifecycle policies for old data
-
-### Network
-- Deploy clients in same Azure region as Kafka
-- Use internal networking when possible
-- Monitor outbound traffic (charged per GB)
-
-### Compute
-- Use Azure Reserved Instances for worker nodes
-- Scale down non-production environments
-- Right-size broker resources based on workload
-
 ## References
 
 - [Red Hat Streams for Apache Kafka 3.1 Documentation](https://docs.redhat.com/en/documentation/red_hat_streams_for_apache_kafka/3.1)

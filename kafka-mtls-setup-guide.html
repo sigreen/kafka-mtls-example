@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="/dev/fd/12" />
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#kafka-mtls-on-self-managed-openshift-4.20-azure"
+id="toc-kafka-mtls-on-self-managed-openshift-4.20-azure">Kafka mTLS on
+Self-Managed OpenShift 4.20 (Azure)</a>
+<ul>
+<li><a href="#overview" id="toc-overview">Overview</a></li>
+<li><a href="#architecture" id="toc-architecture">Architecture</a></li>
+<li><a href="#prerequisites"
+id="toc-prerequisites">Prerequisites</a></li>
+<li><a href="#quick-start" id="toc-quick-start">Quick Start</a></li>
+<li><a href="#file-structure" id="toc-file-structure">File
+Structure</a></li>
+<li><a href="#kraft-mode-architecture"
+id="toc-kraft-mode-architecture">KRaft Mode Architecture</a></li>
+<li><a href="#kafka-configuration-details"
+id="toc-kafka-configuration-details">Kafka Configuration
+Details</a></li>
+<li><a href="#client-examples" id="toc-client-examples">Client
+Examples</a></li>
+<li><a href="#production-considerations"
+id="toc-production-considerations">Production Considerations</a></li>
+<li><a href="#troubleshooting"
+id="toc-troubleshooting">Troubleshooting</a></li>
+<li><a href="#security-best-practices"
+id="toc-security-best-practices">Security Best Practices</a></li>
+<li><a href="#advanced-configuration"
+id="toc-advanced-configuration">Advanced Configuration</a></li>
+<li><a href="#cleanup" id="toc-cleanup">Cleanup</a></li>
+<li><a href="#cost-optimization" id="toc-cost-optimization">Cost
+Optimization</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+<li><a href="#license" id="toc-license">License</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="kafka-mtls-on-self-managed-openshift-4.20-azure">Kafka mTLS on
+Self-Managed OpenShift 4.20 (Azure)</h1>
+<p>Complete configuration for deploying Red Hat Streams for Apache Kafka
+3.1 with mutual TLS (mTLS) authentication on self-managed OpenShift 4.20
+running on Azure.</p>
+<h2 id="overview">Overview</h2>
+<ul>
+<li><strong>Platform</strong>: Self-managed OpenShift 4.20 on Azure (not
+ARO)</li>
+<li><strong>Kafka</strong>: Streams for Apache Kafka 3.1 (Strimzi
+operator)</li>
+<li><strong>Kafka Version</strong>: 4.1.0 in <strong>KRaft mode</strong>
+(no ZooKeeper)</li>
+<li><strong>Architecture</strong>: 3 broker nodes + 3 controller nodes
+(KafkaNodePools)</li>
+<li><strong>Authentication</strong>: mTLS with Strimzi auto-generated
+self-signed certificates</li>
+<li><strong>Authorization</strong>: Simple ACL authorization
+enabled</li>
+<li><strong>Storage</strong>: Configurable (Azure Managed Disks or
+OpenShift Container Storage)</li>
+<li><strong>External Access</strong>: OpenShift Routes with TLS
+passthrough</li>
+<li><strong>High Availability</strong>: Multi-node deployment across
+availability zones</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                  OpenShift 4.20 on Azure                     │
+│                                                               │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │              Kafka Namespace                       │      │
+│  │                                                      │      │
+│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐            │      │
+│  │  │ Kafka-0 │  │ Kafka-1 │  │ Kafka-2 │            │      │
+│  │  │ (mTLS)  │  │ (mTLS)  │  │ (mTLS)  │            │      │
+│  │  └────┬────┘  └────┬────┘  └────┬────┘            │      │
+│  │       │            │            │                  │      │
+│  │       └────────────┴────────────┘                  │      │
+│  │                    │                               │      │
+│  │              ┌─────▼─────┐                         │      │
+│  │              │  Routes   │  (TLS Passthrough)      │      │
+│  │              └─────┬─────┘                         │      │
+│  └────────────────────┼─────────────────────────────┘      │
+│                       │                                     │
+└───────────────────────┼─────────────────────────────────────┘
+                        │
+                  mTLS Port 443
+                        │
+                  ┌─────▼─────┐
+                  │  External │
+                  │  Client   │
+                  │  (cert)   │
+                  └───────────┘</code></pre>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />Self-managed OpenShift
+4.20 cluster on Azure</label></li>
+<li><label><input type="checkbox" checked="" />Red Hat Streams for
+Apache Kafka 3.1 Operator installed</label>
+<ul>
+<li><strong>Supported Kafka versions</strong>: 4.0.0, 4.1.0
+(ZooKeeper-based clusters not supported)</li>
+<li><strong>This guide uses Kafka 4.1.0 in KRaft mode</strong></li>
+</ul></li>
+<li><label><input type="checkbox" checked="" /><code>oc</code> CLI
+installed and authenticated</label></li>
+<li><label><input type="checkbox" checked="" />Storage class configured
+(OpenShift Container Storage or Azure Managed Disks)</label></li>
+<li><label><input type="checkbox" checked="" />DNS configured for
+OpenShift router domain</label></li>
+<li><label><input type="checkbox" checked="" />Sufficient resources: 6
+pods total (3 brokers + 3 controllers) + entity operator</label></li>
+</ul>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="get-your-router-domain">1. Get Your Router Domain</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get ingresses.config.openshift.io cluster <span class="at">-o</span> jsonpath=<span class="st">&#39;{.spec.domain}&#39;</span></span></code></pre></div>
+<p>Example output:
+<code>apps.ocp-cluster.eastus.azure.example.com</code></p>
+<h3 id="update-configuration-files">2. Update Configuration Files</h3>
+<p>Update the following files, replacing
+<code>apps.your-domain.com</code> with your actual router domain: -
+<code>kafka-cluster-mtls.yaml</code> (bootstrap and broker hosts) -
+<code>client-config/client.properties</code> -
+<code>client-config/python-client-example.py</code> -
+<code>client-config/JavaClientExample.java</code></p>
+<p><strong>Quick update script:</strong></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">ROUTER_DOMAIN</span><span class="op">=</span><span class="va">$(</span><span class="ex">oc</span> get ingresses.config.openshift.io cluster <span class="at">-o</span> jsonpath=<span class="st">&#39;{.spec.domain}&#39;</span><span class="va">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">&quot;&quot;</span> <span class="st">&quot;s/apps.your-domain.com/</span><span class="va">${ROUTER_DOMAIN}</span><span class="st">/g&quot;</span> kafka-cluster-mtls.yaml</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">&quot;&quot;</span> <span class="st">&quot;s/apps.your-domain.com/</span><span class="va">${ROUTER_DOMAIN}</span><span class="st">/g&quot;</span> client-config/client.properties</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">&quot;&quot;</span> <span class="st">&quot;s/apps.your-domain.com/</span><span class="va">${ROUTER_DOMAIN}</span><span class="st">/g&quot;</span> client-config/python-client-example.py</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">&quot;&quot;</span> <span class="st">&quot;s/apps.your-domain.com/</span><span class="va">${ROUTER_DOMAIN}</span><span class="st">/g&quot;</span> client-config/JavaClientExample.java</span></code></pre></div>
+<h3 id="verify-storage-class">3. Verify Storage Class</h3>
+<p>Check your available storage class:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get storageclass</span></code></pre></div>
+<p>Update <code>kafka-node-pool.yaml</code> with your storage class.
+Common options: - <strong>Azure</strong>: <code>managed-premium</code>
+(Azure Premium SSD) - <strong>OpenShift Container Storage</strong>:
+<code>ocs-external-storagecluster-ceph-rbd</code> -
+<strong>AWS</strong>: <code>gp3-csi</code></p>
+<h3 id="deploy-kafka-cluster">4. Deploy Kafka Cluster</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create namespace</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> new-project kafka</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Deploy KafkaNodePools first (defines broker &amp; controller pools)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> apply <span class="at">-f</span> kafka-node-pool.yaml</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Deploy Kafka cluster (KRaft mode)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> apply <span class="at">-f</span> kafka-cluster-mtls.yaml</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Wait for cluster to be ready (5-10 minutes)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> wait kafka/my-cluster <span class="at">--for</span><span class="op">=</span>condition=Ready <span class="at">--timeout</span><span class="op">=</span>600s <span class="at">-n</span> kafka</span></code></pre></div>
+<p><strong>What happens during deployment:</strong> - Strimzi operator
+creates 3 Kafka broker nodes + 3 controller nodes (KRaft mode) -
+Auto-generates Cluster CA certificate (signs broker certs) -
+Auto-generates Clients CA certificate (signs client certs) - Creates
+OpenShift Routes for external access - No ZooKeeper needed (using KRaft
+for metadata management)</p>
+<h3 id="create-kafka-user-with-mtls">5. Create Kafka User with mTLS</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> apply <span class="at">-f</span> kafka-user-mtls.yaml</span></code></pre></div>
+<p>Strimzi automatically generates: - Client certificate signed by
+Clients CA - Private key - PKCS12 keystore - Stores in secret
+<code>external-client</code></p>
+<h3 id="extract-client-certificates">6. Extract Client Certificates</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> client-config</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./extract-certificates.sh</span></span></code></pre></div>
+<p><strong>Generated files in <code>./certs/</code>:</strong> -
+<code>truststore.p12</code> - Cluster CA (verify broker identity) -
+<code>user.p12</code> - Client certificate + private key -
+<code>ca.crt</code>, <code>user.crt</code>, <code>user.key</code> - PEM
+format - <code>*.password</code> files - Keystore passwords</p>
+<h3 id="verify-setup">7. Verify Setup</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ..</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./verify-mtls-setup.sh</span></span></code></pre></div>
+<p>This checks: - ✓ Kafka cluster health - ✓ Pods running - ✓ Routes
+configured - ✓ Certificates generated - ✓ TLS connectivity</p>
+<h3 id="test-connection">8. Test Connection</h3>
+<p><strong>Get bootstrap server:</strong></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">BOOTSTRAP_SERVER</span><span class="op">=</span><span class="va">$(</span><span class="ex">oc</span> get kafka my-cluster <span class="at">-n</span> kafka <span class="at">-o</span> jsonpath=<span class="st">&#39;{.status.listeners[?(@.name==&quot;external&quot;)].bootstrapServers}&#39;</span><span class="va">)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$BOOTSTRAP_SERVER</span></span></code></pre></div>
+<p><strong>Test with console producer:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download Kafka binaries (if not installed)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span> https://archive.apache.org/dist/kafka/4.1.0/kafka_2.13-4.1.0.tgz</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xzf</span> kafka_2.13-4.1.0.tgz</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> kafka_2.13-4.1.0</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Start producer</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">bin/kafka-console-producer.sh</span> <span class="dt">\</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--bootstrap-server</span> <span class="va">$BOOTSTRAP_SERVER</span> <span class="dt">\</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--topic</span> test-topic <span class="dt">\</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--producer.config</span> ../client-config/client.properties</span></code></pre></div>
+<p><strong>Test with console consumer (separate terminal):</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bin/kafka-console-consumer.sh</span> <span class="dt">\</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--bootstrap-server</span> <span class="va">$BOOTSTRAP_SERVER</span> <span class="dt">\</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--topic</span> test-topic <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--from-beginning</span> <span class="dt">\</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--consumer.config</span> ../client-config/client.properties</span></code></pre></div>
+<h2 id="file-structure">File Structure</h2>
+<pre><code>kafka-mtls-example/
+├── kafka-cluster-mtls.yaml              # Kafka cluster (Routes, KRaft mode)
+├── kafka-cluster-mtls-loadbalancer.yaml # Alternative (LoadBalancer, KRaft mode)
+├── kafka-node-pool.yaml                 # KafkaNodePools (3 brokers + 3 controllers)
+├── kafka-user-mtls.yaml                 # User with mTLS auth
+├── client-config/
+│   ├── client.properties                # Java/CLI client config
+│   ├── extract-certificates.sh          # Extract certs from secrets
+│   ├── python-client-example.py         # Python producer/consumer
+│   └── JavaClientExample.java           # Java producer/consumer
+├── verify-mtls-setup.sh                 # Deployment verification
+└── README.md                            # This file</code></pre>
+<h2 id="kraft-mode-architecture">KRaft Mode Architecture</h2>
+<p>Kafka 4.x uses <strong>KRaft</strong> (Kafka Raft) instead of
+ZooKeeper:</p>
+<ul>
+<li><strong>Broker Nodes</strong> (3): Handle client requests, store
+data</li>
+<li><strong>Controller Nodes</strong> (3): Manage cluster metadata via
+Raft consensus</li>
+<li><strong>No ZooKeeper</strong>: Simplified architecture, better
+scalability</li>
+<li><strong>KafkaNodePools</strong>: Separate resource pools for brokers
+and controllers</li>
+</ul>
+<h2 id="kafka-configuration-details">Kafka Configuration Details</h2>
+<h3 id="listeners">Listeners</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Port</th>
+<th>Type</th>
+<th>TLS</th>
+<th>Auth</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>plain</td>
+<td>9092</td>
+<td>internal</td>
+<td>No</td>
+<td>None</td>
+<td>Internal plaintext</td>
+</tr>
+<tr>
+<td>tls</td>
+<td>9093</td>
+<td>internal</td>
+<td>Yes</td>
+<td>mTLS</td>
+<td>Internal encrypted</td>
+</tr>
+<tr>
+<td>external</td>
+<td>9094</td>
+<td>route</td>
+<td>Yes</td>
+<td>mTLS</td>
+<td>External client access</td>
+</tr>
+</tbody>
+</table>
+<h3 id="external-access-routes">External Access Routes</h3>
+<p>Each broker gets a dedicated route: - <strong>Bootstrap</strong>:
+<code>kafka-bootstrap.apps.your-domain.com:443</code> - <strong>Broker
+0</strong>: <code>kafka-broker-0.apps.your-domain.com:443</code> -
+<strong>Broker 1</strong>:
+<code>kafka-broker-1.apps.your-domain.com:443</code> - <strong>Broker
+2</strong>: <code>kafka-broker-2.apps.your-domain.com:443</code></p>
+<p>Routes use <strong>TLS passthrough</strong> - OpenShift router
+forwards encrypted traffic directly to Kafka brokers without terminating
+TLS.</p>
+<h3 id="certificate-management-automatic">Certificate Management
+(Automatic)</h3>
+<p>Strimzi handles all certificate lifecycle management:</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Certificate</th>
+<th>Secret Name</th>
+<th>Purpose</th>
+<th>Validity</th>
+<th>Auto-Renewal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster CA</td>
+<td><code>my-cluster-cluster-ca-cert</code></td>
+<td>Sign broker certs</td>
+<td>365 days</td>
+<td>30 days before expiry</td>
+</tr>
+<tr>
+<td>Clients CA</td>
+<td><code>my-cluster-clients-ca-cert</code></td>
+<td>Sign client certs</td>
+<td>365 days</td>
+<td>30 days before expiry</td>
+</tr>
+<tr>
+<td>User Cert</td>
+<td><code>external-client</code></td>
+<td>Client authentication</td>
+<td>365 days</td>
+<td>30 days before expiry</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuration in
+<code>kafka-cluster-mtls.yaml</code>:</strong></p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clientsCa</span><span class="kw">:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">generateCertificateAuthority</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co">  # Auto-generate</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">renewalDays</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span><span class="co">                     # Renew 30 days before expiry</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">validityDays</span><span class="kw">:</span><span class="at"> </span><span class="dv">365</span><span class="co">                   # Valid for 1 year</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">clusterCa</span><span class="kw">:</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">generateCertificateAuthority</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">renewalDays</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">validityDays</span><span class="kw">:</span><span class="at"> </span><span class="dv">365</span></span></code></pre></div>
+<h2 id="client-examples">Client Examples</h2>
+<h3 id="javakafka-cli">Java/Kafka CLI</h3>
+<p>Configuration in <code>client-config/client.properties</code>:</p>
+<pre class="properties"><code>bootstrap.servers=kafka-bootstrap.apps.your-domain.com:443
+security.protocol=SSL
+ssl.truststore.location=./certs/truststore.p12
+ssl.truststore.password=&lt;from-extract-script&gt;
+ssl.keystore.location=./certs/user.p12
+ssl.keystore.password=&lt;from-extract-script&gt;
+ssl.keystore.type=PKCS12
+ssl.truststore.type=PKCS12
+ssl.protocol=TLSv1.3</code></pre>
+<h3 id="python">Python</h3>
+<p>Install dependencies:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install kafka-python</span></code></pre></div>
+<p><strong>Producer:</strong></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> client-config/python-client-example.py produce</span></code></pre></div>
+<p><strong>Consumer:</strong></p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> client-config/python-client-example.py consume</span></code></pre></div>
+<p>See <code>client-config/python-client-example.py</code> for full
+implementation.</p>
+<h3 id="java-application">Java Application</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Properties</span> props <span class="op">=</span> <span class="kw">new</span> <span class="bu">Properties</span><span class="op">();</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;bootstrap.servers&quot;</span><span class="op">,</span> <span class="st">&quot;kafka-bootstrap.apps.your-domain.com:443&quot;</span><span class="op">);</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;security.protocol&quot;</span><span class="op">,</span> <span class="st">&quot;SSL&quot;</span><span class="op">);</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;ssl.truststore.location&quot;</span><span class="op">,</span> <span class="st">&quot;./certs/truststore.p12&quot;</span><span class="op">);</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;ssl.truststore.password&quot;</span><span class="op">,</span> <span class="st">&quot;truststore-password&quot;</span><span class="op">);</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;ssl.keystore.location&quot;</span><span class="op">,</span> <span class="st">&quot;./certs/user.p12&quot;</span><span class="op">);</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;ssl.keystore.password&quot;</span><span class="op">,</span> <span class="st">&quot;user-password&quot;</span><span class="op">);</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;ssl.keystore.type&quot;</span><span class="op">,</span> <span class="st">&quot;PKCS12&quot;</span><span class="op">);</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>props<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;ssl.truststore.type&quot;</span><span class="op">,</span> <span class="st">&quot;PKCS12&quot;</span><span class="op">);</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>KafkaProducer<span class="op">&lt;</span><span class="bu">String</span><span class="op">,</span> <span class="bu">String</span><span class="op">&gt;</span> producer <span class="op">=</span> <span class="kw">new</span> KafkaProducer<span class="op">&lt;&gt;(</span>props<span class="op">);</span></span></code></pre></div>
+<p>See <code>client-config/JavaClientExample.java</code> for full
+implementation.</p>
+<h2 id="production-considerations">Production Considerations</h2>
+<h3 id="resource-sizing">Resource Sizing</h3>
+<p><strong>Minimum worker node specs:</strong> - VM Size:
+<code>Standard_D4s_v4</code> or larger - vCPUs: 4+ - Memory: 16GB+ -
+Network: Accelerated networking enabled - Nodes: 5+ (for redundancy
+beyond 3 brokers)</p>
+<p><strong>Kafka broker resources (production):</strong></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resources</span><span class="kw">:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">requests</span><span class="kw">:</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">memory</span><span class="kw">:</span><span class="at"> 8Gi</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cpu</span><span class="kw">:</span><span class="at"> 2000m</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">limits</span><span class="kw">:</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">memory</span><span class="kw">:</span><span class="at"> 8Gi</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cpu</span><span class="kw">:</span><span class="at"> 4000m</span></span></code></pre></div>
+<h3 id="scaling">Scaling</h3>
+<p><strong>Increase broker count:</strong></p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kafka</span><span class="kw">:</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">replicas</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span><span class="co">  # Increase from 3</span></span></code></pre></div>
+<p>Apply changes:</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> apply <span class="at">-f</span> kafka-cluster-mtls.yaml</span></code></pre></div>
+<h3 id="monitoring">Monitoring</h3>
+<p><strong>Enable Prometheus metrics:</strong></p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kafka</span><span class="kw">:</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">metricsConfig</span><span class="kw">:</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">type</span><span class="kw">:</span><span class="at"> jmxPrometheusExporter</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">valueFrom</span><span class="kw">:</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">configMapKeyRef</span><span class="kw">:</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> kafka-metrics</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> kafka-metrics-config.yml</span></span></code></pre></div>
+<p><strong>Monitor key metrics:</strong> - Disk IOPS and throughput
+(Azure) - Network throughput - CPU/Memory utilization - Kafka lag,
+request rate, error rate</p>
+<h3 id="backup-strategy">Backup Strategy</h3>
+<p><strong>Azure Disk snapshots:</strong></p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List PVCs</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get pvc <span class="at">-n</span> kafka</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create snapshot via Azure CLI</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="ex">az</span> snapshot create <span class="dt">\</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--resource-group</span> <span class="op">&lt;</span>resource-group<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--source</span> <span class="op">&lt;</span>disk-id<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--name</span> kafka-backup-<span class="va">$(</span><span class="fu">date</span> +%Y%m%d<span class="va">)</span></span></code></pre></div>
+<p><strong>Alternative: Velero with Azure Blob Storage</strong></p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="cluster-not-ready">Cluster Not Ready</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check pod status</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get pods <span class="at">-n</span> kafka</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View logs</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> logs my-cluster-kafka-0 <span class="at">-n</span> kafka</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Describe cluster</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> describe kafka my-cluster <span class="at">-n</span> kafka</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check events</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get events <span class="at">-n</span> kafka <span class="at">--sort-by</span><span class="op">=</span><span class="st">&#39;.lastTimestamp&#39;</span></span></code></pre></div>
+<h3 id="routes-not-accessible">Routes Not Accessible</h3>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check routes</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get routes <span class="at">-n</span> kafka</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> describe route my-cluster-kafka-bootstrap <span class="at">-n</span> kafka</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Test DNS</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nslookup</span> kafka-bootstrap.apps.your-domain.com</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify router pods</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get pods <span class="at">-n</span> openshift-ingress</span></code></pre></div>
+<h3 id="certificate-issues">Certificate Issues</h3>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View cluster CA</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get secret my-cluster-cluster-ca-cert <span class="at">-n</span> kafka <span class="at">-o</span> jsonpath=<span class="st">&#39;{.data.ca\.crt}&#39;</span> <span class="kw">|</span> <span class="fu">base64</span> <span class="at">-d</span> <span class="kw">|</span> <span class="ex">openssl</span> x509 <span class="at">-text</span> <span class="at">-noout</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View user cert</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get secret external-client <span class="at">-n</span> kafka <span class="at">-o</span> jsonpath=<span class="st">&#39;{.data.user\.crt}&#39;</span> <span class="kw">|</span> <span class="fu">base64</span> <span class="at">-d</span> <span class="kw">|</span> <span class="ex">openssl</span> x509 <span class="at">-text</span> <span class="at">-noout</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify cert chain</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="ex">openssl</span> verify <span class="at">-CAfile</span> ./certs/ca.crt ./certs/user.crt</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test TLS handshake</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="ex">openssl</span> s_client <span class="at">-connect</span> kafka-bootstrap.apps.your-domain.com:443 <span class="dt">\</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">-cert</span> ./certs/user.crt <span class="at">-key</span> ./certs/user.key <span class="at">-CAfile</span> ./certs/ca.crt</span></code></pre></div>
+<h3 id="storage-issues">Storage Issues</h3>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check PVCs</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get pvc <span class="at">-n</span> kafka</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check storage class</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get storageclass</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># View Azure disk metrics</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="ex">az</span> monitor metrics list <span class="dt">\</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--resource</span> <span class="op">&lt;</span>disk-resource-id<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--metric</span> <span class="st">&quot;Composite Disk Read IOPS&quot;</span> <span class="st">&quot;Composite Disk Write IOPS&quot;</span></span></code></pre></div>
+<h3 id="common-issues">Common Issues</h3>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 34%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Symptom</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PVC Pending</td>
+<td>Pods not starting</td>
+<td>Check storage class exists: <code>oc get sc</code></td>
+</tr>
+<tr>
+<td>Route not accessible</td>
+<td>Connection timeout</td>
+<td>Verify DNS and router pods</td>
+</tr>
+<tr>
+<td>Certificate verification failed</td>
+<td>SSL errors</td>
+<td>Check truststore contains correct CA</td>
+</tr>
+<tr>
+<td>Authentication failed</td>
+<td>Permission denied</td>
+<td>Ensure client cert signed by clients CA</td>
+</tr>
+<tr>
+<td>Disk performance</td>
+<td>Slow writes</td>
+<td>Upgrade to larger disk size (more IOPS)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-best-practices">Security Best Practices</h2>
+<ol type="1">
+<li><strong>mTLS Enforced</strong>: All external clients must present
+valid certificates</li>
+<li><strong>Strong Ciphers</strong>: TLS 1.3/1.2 only, AES-256-GCM,
+AES-128-GCM</li>
+<li><strong>Auto Certificate Rotation</strong>: Certificates renewed 30
+days before expiry</li>
+<li><strong>ACLs</strong>: Configure per-user topic permissions in
+<code>kafka-user-mtls.yaml</code></li>
+<li><strong>Network Policies</strong>: Add OpenShift NetworkPolicies for
+pod isolation</li>
+<li><strong>Azure Security</strong>:
+<ul>
+<li>Use Azure Key Vault for sensitive data</li>
+<li>Enable Azure Defender for threat detection</li>
+<li>Configure NSGs to limit access</li>
+<li>Use Azure Private Link for internal connectivity</li>
+</ul></li>
+</ol>
+<h2 id="advanced-configuration">Advanced Configuration</h2>
+<h3 id="create-additional-users">Create Additional Users</h3>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> kafka.strimzi.io/v1beta2</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> KafkaUser</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> app-producer</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">namespace</span><span class="kw">:</span><span class="at"> kafka</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">labels</span><span class="kw">:</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">strimzi.io/cluster</span><span class="kw">:</span><span class="at"> my-cluster</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">authentication</span><span class="kw">:</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> tls</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">authorization</span><span class="kw">:</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> simple</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">acls</span><span class="kw">:</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">resource</span><span class="kw">:</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">type</span><span class="kw">:</span><span class="at"> topic</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> app-events</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">patternType</span><span class="kw">:</span><span class="at"> literal</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> Write</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> Describe</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">host</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;*&quot;</span></span></code></pre></div>
+<p>Apply:</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> apply <span class="at">-f</span> app-producer.yaml</span></code></pre></div>
+<p>Extract certs:</p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> get secret app-producer <span class="at">-n</span> kafka <span class="at">-o</span> jsonpath=<span class="st">&#39;{.data.user\.p12}&#39;</span> <span class="kw">|</span> <span class="fu">base64</span> <span class="at">-d</span> <span class="op">&gt;</span> app-producer.p12</span></code></pre></div>
+<h3 id="configure-topic-auto-creation">Configure Topic
+Auto-Creation</h3>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kafka</span><span class="kw">:</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">auto.create.topics.enable</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">default.replication.factor</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">min.insync.replicas</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">num.partitions</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span></code></pre></div>
+<h3 id="enable-rack-awareness">Enable Rack Awareness</h3>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kafka</span><span class="kw">:</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">rack</span><span class="kw">:</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">topologyKey</span><span class="kw">:</span><span class="at"> topology.kubernetes.io/zone</span></span></code></pre></div>
+<h2 id="cleanup">Cleanup</h2>
+<p><strong>Warning</strong>: This deletes all Kafka data
+permanently.</p>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete user</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> delete kafkauser external-client <span class="at">-n</span> kafka</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete Kafka cluster (deletes all data)</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> delete kafka my-cluster <span class="at">-n</span> kafka</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete namespace</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="ex">oc</span> delete project kafka</span></code></pre></div>
+<h2 id="cost-optimization">Cost Optimization</h2>
+<h3 id="storage">Storage</h3>
+<ul>
+<li>Use snapshots instead of maintaining extra disks</li>
+<li>Right-size based on actual usage</li>
+<li>Consider lifecycle policies for old data</li>
+</ul>
+<h3 id="network">Network</h3>
+<ul>
+<li>Deploy clients in same Azure region as Kafka</li>
+<li>Use internal networking when possible</li>
+<li>Monitor outbound traffic (charged per GB)</li>
+</ul>
+<h3 id="compute">Compute</h3>
+<ul>
+<li>Use Azure Reserved Instances for worker nodes</li>
+<li>Scale down non-production environments</li>
+<li>Right-size broker resources based on workload</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a
+href="https://docs.redhat.com/en/documentation/red_hat_streams_for_apache_kafka/3.1">Red
+Hat Streams for Apache Kafka 3.1 Documentation</a></li>
+<li><a href="https://strimzi.io/docs/operators/latest/overview">Strimzi
+Documentation</a></li>
+<li><a href="https://kafka.apache.org/documentation/#security">Apache
+Kafka Security</a></li>
+<li><a
+href="https://docs.openshift.com/container-platform/4.20/installing/installing_azure/preparing-to-install-on-azure.html">OpenShift
+4.20 on Azure</a></li>
+<li><a
+href="https://docs.microsoft.com/azure/virtual-machines/managed-disks-overview">Azure
+Managed Disks</a></li>
+</ul>
+<h2 id="license">License</h2>
+<p>This example configuration is provided as-is for educational
+purposes.</p>
+</body>
+</html>
