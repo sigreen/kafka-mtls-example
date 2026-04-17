@@ -1,0 +1,68 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: my-cluster
+  namespace: kafka
+  annotations:
+    strimzi.io/node-pools: enabled
+    strimzi.io/kraft: enabled
+spec:
+  kafka:
+    version: 4.1.0
+    # Using KRaft mode - no ZooKeeper needed
+    metadataVersion: 4.1-IV0
+    # Enable ACL authorization
+    authorization:
+      type: simple
+    listeners:
+      # Internal listener for cluster communication
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      # Internal TLS listener
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: tls
+      # External listener with mTLS authentication
+      - name: external
+        port: 9094
+        type: route
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          bootstrap:
+            host: kafka-bootstrap.apps.your-domain.com
+          brokers:
+          - broker: 0
+            host: kafka-broker-0.apps.your-domain.com
+          - broker: 1
+            host: kafka-broker-1.apps.your-domain.com
+          - broker: 2
+            host: kafka-broker-2.apps.your-domain.com
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      # TLS/SSL related configs
+      ssl.cipher.suites: "TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256"
+      ssl.enabled.protocols: "TLSv1.3,TLSv1.2"
+      ssl.protocol: "TLSv1.3"
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+  # Strimzi auto-generates self-signed certificates
+  clientsCa:
+    generateCertificateAuthority: true
+    renewalDays: 30
+    validityDays: 365
+  clusterCa:
+    generateCertificateAuthority: true
+    renewalDays: 30
+    validityDays: 365

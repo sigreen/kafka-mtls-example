@@ -1,0 +1,42 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: external-client
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  # mTLS authentication - generates client certificates
+  authentication:
+    type: tls
+  # ACL authorization for the client
+  authorization:
+    type: simple
+    acls:
+      # Allow consumer group operations
+      - resource:
+          type: group
+          name: external-client-group
+          patternType: literal
+        operations:
+          - Read
+        host: "*"
+      # Allow reading from topics
+      - resource:
+          type: topic
+          name: "*"
+          patternType: literal
+        operations:
+          - Read
+          - Describe
+        host: "*"
+      # Allow writing to topics
+      - resource:
+          type: topic
+          name: "*"
+          patternType: literal
+        operations:
+          - Write
+          - Create
+          - Describe
+        host: "*"

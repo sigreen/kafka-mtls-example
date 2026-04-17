@@ -1,0 +1,53 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: broker-pool
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  replicas: 3
+  roles:
+    - broker
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: 100Gi
+        deleteClaim: false
+        class: ocs-external-storagecluster-ceph-rbd
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: 1000m
+    limits:
+      memory: 4Gi
+      cpu: 2000m
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: controller-pool
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  replicas: 3
+  roles:
+    - controller
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: 10Gi
+        deleteClaim: false
+        class: ocs-external-storagecluster-ceph-rbd
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 500m
+    limits:
+      memory: 1Gi
+      cpu: 1000m
